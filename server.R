@@ -1,0 +1,48 @@
+library(shiny)
+library(rgeos)
+library(maptools)
+library(ggplot2)
+library(dplyr)
+library(stringr)
+#ind <- readShapeSpatial("./IND_adm/IND_adm1.shp")
+#ind <- fortify(ind, region = "NAME_1")
+source("./literacy.R", local=TRUE)
+
+# Read the data
+a <- read.csv("education.csv")
+
+# Clean the Area Name
+colnames(a) <- gsub("Educational.level...","",colnames(a))
+a$Area.Name <-gsub("State - ","",a$Area.Name)
+a$Area.Name <- gsub("\\d+","",a$Area.Name)
+# Remove trailing spaces
+a$Area.Name <- gsub("[[:space:]]*$","",a$Area.Name)
+
+states <- unique(a$Area.Name)
+
+# Define server logic required to draw a histogram
+shinyServer(function(input, output,session) {
+    
+    # Expression that generates a histogram. The expression is
+    # wrapped in a call to renderPlot to indicate that:
+    #
+    #  1) It is "reactive" and therefore should re-execute automatically
+    #     when inputs change
+    #  2) Its output type is a plot
+    #updateSelectizeInput(session, 'id', choices = states, server = TRUE)
+    updateSelectizeInput(session, 'state', choices = states, server = TRUE)
+    output$distPlot <- renderPlot({  
+        #print(input$radio)
+        #print(input$id)
+        educationalLevels(a,input$type,input$region, input$state)
+    })
+    output$statePlot <- renderPlot({  
+        print(input$radio1)
+        print(input$state)
+        if(input$state==""){
+            theState <-"Assam"
+        }
+        plotCrime(b,input$state,input$radio1)
+    })
+    
+})
