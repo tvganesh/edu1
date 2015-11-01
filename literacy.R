@@ -25,15 +25,13 @@ educationalLevels <- function(df,peopleType,type,state) {
     names(people) <- gsub(l,"",names(people))
     
    
-    #females <- select(b,matches("Females",ignore.case=FALSE))
-    #persons <- select(b,matches("Persons",ignore.case=FALSE))
-    
-    
-    
+    # Compute the percentage of people in the age group (4,5,6..)  as a percentage of total people in group  
     l <- dim(people)
     for(i in 2:l[1]) {
         for(j in 2:l[2]) {
-            people[i,j] <- people[i,j]/people[j,1]*100
+            # people[5,8]  <- people[5,8]/people[1,8] *100 - In
+            people[i,j] <- people[i,j]/people[1,j]*100
+                           
         }
     }
     
@@ -58,7 +56,7 @@ educationalLevels <- function(df,peopleType,type,state) {
     atitle <- paste("Distribution of literacy among",tolower(type),tolower(peopleType), "in", state,"over different age groups")
    
     ggplot(m2,aes(x=age,y=value,fill=variable)) +     geom_bar(stat = "identity") +
-         xlab("Age") + ylab("Percent") +
+         xlab("Age") + ylab("Percentage from different age groups") +
         ggtitle(atitle)
     
 }
