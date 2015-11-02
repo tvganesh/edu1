@@ -60,3 +60,156 @@ educationalLevels <- function(df,peopleType,type,state) {
         ggtitle(atitle)
     
 }
+
+################################################################################################
+#
+#
+###############################################################################################
+
+bar <- function(df,peopleType,type,state,literacyLevel) {
+    dim(df)
+    print(peopleType)
+    print(type)
+    print(state)
+    print(literacyLevel)
+    #a <- read.csv("education.csv")
+    #colnames(a) <- gsub("Educational.level...","",colnames(a))
+    
+    
+    #a$Area.Name <-gsub("State - ","",a$Area.Name)
+    #a$Area.Name <- gsub("\\d+","",a$Area.Name)
+    
+    # Remove trailing spaces
+    #a$Area.Name <- gsub("[[:space:]]*$","",a$Area.Name)
+    
+    b <- filter(a,Area.Name==state & Total..Rural..Urban==type)
+    #b <- filter(a,Area.Name=="KERALA" & Total..Rural..Urban=="Rural")
+    
+  
+    
+    # Select colums from 8 - 21
+    c <- b[,7:19]
+    # Set names
+    names(c) <-c("Age","Persons","Males","Females","EduPersons","EduMales",
+                 "EduFemales","IlliteratePersons","IlliterateMales",
+                 "IlliterateFemales","LiteratePersons","LiterateMales","LiterateFemales")
+    
+    # Subset columns with persons
+    people <- select(c,matches(peopleType,ignore.case=FALSE))
+    
+    # Calculate males percent as percent of total males
+    peoplePercent <- people[,2:4]/people[,1]*100
+    
+    # Add the age column
+    peoplePercent <- cbind(c[1],peoplePercent)
+    
+    
+    # Drop the 1st row
+    peoplePercent <- peoplePercent[2:length(rownames(peoplePercent)),]
+    
+    #Do the same for the India to plot the national average
+    m <- filter(a,Area.Name=="INDIA" & Total..Rural..Urban==type)
+    
+    # Select colums from 8 - 21
+    n <- m[,7:19]
+    # Set names
+    names(n) <-c("Age","Persons","Males","Females","EduPersons","EduMales",
+                            "EduFemales","IlliteratePersons","IlliterateMales",
+                            "IlliterateFemales","LiteratePersons","LiterateMales","LiterateFemales")
+    
+    
+    # Subset columns with persons
+    natPeople <- select(n,matches(peopleType,ignore.case=FALSE))
+    
+    # Calculate males percent as percent of total males
+    natPeoplePercent <- natPeople[,2:4]/natPeople[,1]*100
+    
+    # Add the age column
+    natPeoplePercent <- cbind(c[1],natPeoplePercent)
+
+    # Drop the 1st row
+    natPeoplePercent <- natPeoplePercent[2:length(rownames(natPeoplePercent)),]
+    
+    
+    #Use a color palette
+    pal <- colorRampPalette(c("yellow","blue"))
+    colors=pal(22)
+    
+    # Create the column from the literacyLevel input
+    u <- literacyLevel
+    v <- paste(literacyLevel,peopleType,sep="")
+    w <- which(names(peoplePercent) == v)
+    
+    natPeople <- barplot(natPeoplePercent[,w],names.arg=natPeoplePercent$Age,
+                         col="white",border=NA)
+    
+    barplot(peoplePercent[,w],names.arg=peoplePercent$Age,col=colors,ylim=c(0,100),xlab="Age",
+            ylab="Percent",main="Test")
+    
+    with(data=natPeoplePercent,lines(natPeople,natPeoplePercent[,w],col="black",lty=3,lwd=3))
+    
+    ################################################################################
+    ################################################################################
+   
+   
+    
+    
+    
+}
+allPercent <- function() {
+    b <- filter(a,Area.Name==state & Total..Rural..Urban==type)
+    
+    # Select colums from 8 - 21
+    c <- b[,7:19]
+    # Set names
+    names(c) <-c("Age","Persons","Males","Females","PersonsEdu","MalesEdu",
+                 "FemalesEdu","IlliteratePersons","IlliterateMales",
+                 "IlliterateFemales","LiteratePersons","LiterateMales","LiterateFemales")
+    
+    males <- select(c,matches("Males",ignore.case=FALSE))
+    females <- select(c,matches("Females",ignore.case=FALSE))
+    persons <- select(c,matches("Persons",ignore.case=FALSE))
+    
+    
+    # Calculate males percent as percent of total males
+    malesPercent <- males[,2:4]/males[,1]*100
+    # Calculate females percent as percent of total females
+    femalesPercent <- females[,2:4]/females[,1]*100
+    # Calculate persons percent as percent of total persons
+    personsPercent <- persons[,2:4]/persons[,1]*100
+    
+    # Add the age column
+    malesPercent <- cbind(c[1],malesPercent)
+    femalesPercent <- cbind(c[1],femalesPercent)
+    personsPercent <- cbind(c[1],personsPercent)
+    
+    # Drop the 1st row
+    malesPercent <- malesPercent[2:length(rownames(malesPercent)),]
+    femalesPercent <- femalesPercent[2:length(rownames(femalesPercent)),]
+    personsPercent <- personsPercent[2:length(rownames(personsPercent)),]
+    
+    
+    
+    
+    #Use a color palette
+    pal <- colorRampPalette(c("yellow","blue"))
+    colors=pal(22)
+    
+    barplot(malesPercent$MalesEdu,names.arg=malesPercent$Age,col=colors)
+    with(data=IndiaMalesPercent,lines(indiaPersons,MalesEdu,col="black",lty=3,lwd=4))
+    
+    barplot(femalesPercent$FemalesEdu,names.arg=femalesPercent$Age,col=colors)
+    with(data=IndiaFemalesPercent,lines(indiaPersons,FemalesEdu,col="black",lty=4,lwd=4))
+    
+    
+    barplot(personsPercent$PersonsEdu,names.arg=personsPercent$Age,col=colors)
+    with(data=IndiaPersonsPercent,lines(indiaPersons,PersonsEdu,col="black",lty=4,lwd=4))
+    
+    
+    persons <- barplot(personsPercent$PersonsEdu,names.arg=personsPercent$Age,
+                       col="white",border=NA)
+    
+    with(data=personsPercent,lines(persons,PersonsEdu,col="black"))
+    with(data=malesPercent,lines(persons,MalesEdu,col="blue"))
+    with(data=femalesPercent,lines(persons,FemalesEdu,col="red"))
+}

@@ -30,19 +30,23 @@ shinyServer(function(input, output,session) {
     #     when inputs change
     #  2) Its output type is a plot
     #updateSelectizeInput(session, 'id', choices = states, server = TRUE)
+    #updateSelectizeInput(session, 'state', choices = states, server = TRUE)
     updateSelectizeInput(session, 'state', choices = states, server = TRUE)
     output$distPlot <- renderPlot({  
+        
         #print(input$radio)
         #print(input$id)
         educationalLevels(a,input$type,input$region, input$state)
     })
+    updateSelectizeInput(session, 'state1', choices = states, server = TRUE)
     output$statePlot <- renderPlot({  
+        
         print(input$radio1)
-        print(input$state)
-        if(input$state==""){
-            theState <-"Assam"
+        print(input$state1)
+        if(input$state1==""){
+            state <-"INDIA"
         }
-        plotCrime(b,input$state,input$radio1)
+        bar(a,input$type1,input$region1, input$state1,input$literacy1)
     })
     
 })
