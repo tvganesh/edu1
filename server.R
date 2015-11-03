@@ -48,5 +48,16 @@ shinyServer(function(input, output,session) {
         }
         bar(a,input$type1,input$region1, input$state1,input$literacy1)
     })
+    u <- c(-1,-2,-5,-8,-12,-14,-15,-16,-17,-18,-26,-27,-31,-32,-35,-36)
+    updatedStates <- states[u]
+    updateSelectizeInput(session, 'state2', choices = updatedStates, server = TRUE)
+    output$districtPlot <- renderPlot({  
+        if(input$state2==""){
+            state2 <-"PUNJAB"
+        }
+        #print(input$radio)
+        #print(input$id)
+        districtEdu(input$state2)
+    })
     
 })

@@ -37,7 +37,7 @@ shinyUI(navbarPage("Crimes against women in India",
                             
                             
                    ),
-                   tabPanel("Statewise crimes",
+                   tabPanel("Statewise literacy",
                             
                         
                                      titlePanel("Literacy in each state"),
@@ -64,7 +64,7 @@ shinyUI(navbarPage("Crimes against women in India",
                                                              choices = list("Attending Edn" = "Edu",
                                                                             "Illiterate" = "Illiterate", 
                                                                             "Literate" = "Literate"),                                                                  
-                                                             selected = "Attending Edn")
+                                                             selected = "Edu")
                                          ),
                                          
                                          # Show a plot of the generated distribution
@@ -77,7 +77,33 @@ shinyUI(navbarPage("Crimes against women in India",
                             )
                             
                   ),
-                   tabPanel("Component 3")
+                  tabPanel("District-wiseLiteracy",
+                           # Application title
+                           titlePanel("Literacy withion states"),
+                           
+                           
+                           fluidRow(
+                               column(3,
+                                      selectizeInput(
+                                          "state2", label = "States", choices = NULL,multiple=FALSE,selected="Assam",
+                                          options = list(create = TRUE,placeholder = 'Choose the state')
+                                          
+                                      )
+                                      
+                               ),
+                               
+                               # Show a plot of the generated distribution
+                               
+                               column(6,
+                                      plotOutput("districtPlot")
+                               )
+                               
+                               
+                           )      
+                           
+                           
+                           
+                  )
                
 ))
 
