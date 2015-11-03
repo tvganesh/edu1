@@ -131,9 +131,9 @@ shinyUI(navbarPage("Crimes against women in India",
                                                                   "Non Technical Diploma" = "NonTechnicalDiploma",
                                                                   "Technical Diploma" = "TechnicalDiploma",
                                                                   "Graduate and Above" = "GraduateAndAbove",
-                                                                  "Unclassified" = "Unclassified"
-                                                                  ),                                                   
-                                                   selected = "Total")
+                                                                  "Unclassified" = "Unclassified"),
+                                                                                                                     
+                                                   selected = "AttendingEdu")
                                       
                                ),
                                

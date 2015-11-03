@@ -569,15 +569,34 @@ literacyIndia <- function(region,peopleType,literacyLevel)
     j = min(peoplePercent[,w])
     mid = (i+j)/2
     
+
+    
     df = data.frame(peoplePercent$Area.Name,peoplePercent[,w])
     names(df) <- c("Area.Name","percentages")
+    
+    if(literacyLevel == "Illiterate"){
+        m <- head(arrange(df,percentages),5)
+        
+    } else {
+        m <- head(arrange(df,desc(percentages)),5)
+    }
+    literacy <- paste(m$Area.Name,"(",round(m$percentages,1),")",sep="")
+    labels <- data.frame(
+        xc = c(90,90,90,90,90), 
+        yc = c(11,10,9,8,7), 
+        label = as.vector(literacy) 
+        
+    )
+   
     ggplot() + geom_map(data=df, aes(map_id = Area.Name, fill = percentages),
                         map = ind,,color="black",size=0.25) + 
         expand_limits(x = ind$long, y = ind$lat) + 
-        scale_fill_distiller(name="Percent", palette = "OrRd")
-    #scale_fill_gradient2(low = "grey",                                                                           
-    #mid = "blue", midpoint = mid, high = "red", limits = c(j, i)) 
-    
+        scale_fill_distiller(name="Percent", palette = "OrRd")+
+        geom_text(data = labels, aes(x = xc, y = yc, label = label))+
+        geom_text(aes(label="Top 5",90,12),colour="blue")+
+        #geom_text(aes(label="Data source:https://data.gov.in",maxLong-1,minLat+0.1)) +
+        xlab("Longitude") + ylab("Latitude")
+   
     
     
       
