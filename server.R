@@ -59,5 +59,13 @@ shinyServer(function(input, output,session) {
         #print(input$id)
         districtEdu(input$state2)
     })
+    output$indiaLiteracy <- renderPlot({  
+        if(input$state2==""){
+            state2 <-"PUNJAB"
+        }
+        #print(input$radio)
+        #print(input$id)
+        literacyIndia(input$region2,input$type2,input$literacyLevel)
+    })
     
 })

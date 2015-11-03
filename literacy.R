@@ -476,3 +476,113 @@ allPercent <- function() {
     with(data=malesPercent,lines(persons,MalesEdu,col="blue"))
     with(data=femalesPercent,lines(persons,FemalesEdu,col="red"))
 }
+
+##############################################
+##################################################
+literacyIndia <- function(region,peopleType,literacyLevel)
+{
+    
+    
+    b <- read.csv("education.csv")
+    c <- filter(b,Age.group=="All ages" & Total..Rural..Urban==region)
+    
+    
+    # Subset columns with persons
+    people <- select(c,matches(peopleType,ignore.case=FALSE))
+    
+    peoplePercent <- people[,2:14]/people[,1]*100
+    names(peoplePercent) <- c("AttendingEdu","Illiterate","Literate","LiterateNoEdu",
+                              "BelowPrimary","Primary","Middle","MatricSecondary","HigherSecIntmdtPU",
+                              "NonTechnicalDiploma","TechnicalDiploma","GraduateAndAbove","Unclassified")
+    
+
+    
+    
+    # Add the age column
+    peoplePercent <- cbind(c[5],peoplePercent)
+    
+    
+    # Remove the row corresponding to India
+    peoplePercent <- peoplePercent[2:length(rownames(peoplePercent)),]
+    peoplePercent$Area.Name <-gsub("State - ","",peoplePercent$Area.Name)
+    peoplePercent$Area.Name <- gsub("\\d+","",peoplePercent$Area.Name)
+    
+    # Remove trailing spaces
+    peoplePercent$Area.Name <- gsub("[[:space:]]*$","",peoplePercent$Area.Name)
+    
+    ind <- readShapeSpatial("./India_SHP/INDIA.shp")
+    plot(ind)
+    
+    ind <- fortify(ind, region = "ST_NAME")
+    
+    
+    # Set the names as in the map
+    peoplePercent[peoplePercent$Area.Name=="JAMMU & KASHMIR",]$Area.Name = "Jammu And Kashmir"
+    
+    peoplePercent[peoplePercent$Area.Name=="HIMACHAL PRADESH",]$Area.Name = "Himachal Pradesh"
+    peoplePercent[peoplePercent$Area.Name=="PUNJAB",]$Area.Name = "Punjab"
+    peoplePercent[peoplePercent$Area.Name=='UTTARANCHAL',]$Area.Name = "Uttarakhand"
+    peoplePercent[peoplePercent$Area.Name=="CHANDIGARH",]$Area.Name = "CHANDIGARH"
+    
+    peoplePercent[peoplePercent$Area.Name=="HARYANA",]$Area.Name = "Haryana"
+    
+    peoplePercent[peoplePercent$Area.Name=="DELHI",]$Area.Name = "Nct Of Delhi"
+    peoplePercent[peoplePercent$Area.Name=="RAJASTHAN",]$Area.Name = "Rajasthan"
+    peoplePercent[peoplePercent$Area.Name=="UTTAR PRADESH",]$Area.Name = "Uttar Pradesh"
+    peoplePercent[peoplePercent$Area.Name=="BIHAR",]$Area.Name = "Bihar"
+    peoplePercent[peoplePercent$Area.Name=="SIKKIM",]$Area.Name = "Sikkim"
+    
+    peoplePercent[peoplePercent$Area.Name=="ARUNACHAL PRADESH",]$Area.Name = "Arunachal Pradesh"
+    peoplePercent[peoplePercent$Area.Name=="NAGALAND",]$Area.Name = "Nagaland"
+    peoplePercent[peoplePercent$Area.Name=="MANIPUR",]$Area.Name = "Manipur"
+    peoplePercent[peoplePercent$Area.Name=="MIZORAM",]$Area.Name = "Mizoram"
+    
+    peoplePercent[peoplePercent$Area.Name=="TRIPURA",]$Area.Name = "Tripura"
+    peoplePercent[peoplePercent$Area.Name=="MEGHALAYA",]$Area.Name = "Meghalaya"
+    peoplePercent[peoplePercent$Area.Name=="ASSAM",]$Area.Name = "Assam"
+    peoplePercent[peoplePercent$Area.Name=="WEST BENGAL",]$Area.Name = "West Bengal"
+    peoplePercent[peoplePercent$Area.Name=="JHARKHAND",]$Area.Name = "Jharkhand"
+    
+    peoplePercent[peoplePercent$Area.Name=="ORISSA",]$Area.Name = "Orissa"
+    peoplePercent[peoplePercent$Area.Name=="CHHATTISGARH",]$Area.Name = "Chhattisgarh"
+    peoplePercent[peoplePercent$Area.Name=="MADHYA PRADESH",]$Area.Name = "Madhya Pradesh"
+    
+    peoplePercent[peoplePercent$Area.Name=="GUJARAT",]$Area.Name = "Gujarat"
+    peoplePercent[peoplePercent$Area.Name=="DAMAN & DIU",]$Area.Name = "DAMAN AND DIU"
+    peoplePercent[peoplePercent$Area.Name=="DADRA & NAGAR HAVELI",]$Area.Name = "DADRA AND NAGAR HAVELI"
+    
+    peoplePercent[peoplePercent$Area.Name=="MAHARASHTRA",]$Area.Name = "Maharashtra"
+    peoplePercent[peoplePercent$Area.Name=="ANDHRA PRADESH",]$Area.Name = "Andhra Pradesh"
+    peoplePercent[peoplePercent$Area.Name=="KARNATAKA",]$Area.Name = "Karnataka"
+    peoplePercent[peoplePercent$Area.Name=="GOA",]$Area.Name = "Goa"
+    
+    peoplePercent[peoplePercent$Area.Name=="LAKSHADWEEP",]$Area.Name = "LAKSHADWEEP"
+    peoplePercent[peoplePercent$Area.Name=="KERALA",]$Area.Name = "Kerala"
+    peoplePercent[peoplePercent$Area.Name=="TAMIL NADU",]$Area.Name = "Tamil Nadu"
+    peoplePercent[peoplePercent$Area.Name=="PONDICHERRY",]$Area.Name = "Pondicherry"
+    peoplePercent[peoplePercent$Area.Name=="ANDAMAN & NICOBAR ISLANDS",]$Area.Name = "ANDAMAN AND NICOBAR ISLANDS"
+    
+    w <- which(names(peoplePercent) == literacyLevel)
+    
+    
+    i= max(peoplePercent[,w])
+    j = min(peoplePercent[,w])
+    mid = (i+j)/2
+    
+    df = data.frame(peoplePercent$Area.Name,peoplePercent[,w])
+    names(df) <- c("Area.Name","percentages")
+    ggplot() + geom_map(data=df, aes(map_id = Area.Name, fill = percentages),
+                        map = ind,,color="black",size=0.25) + 
+        expand_limits(x = ind$long, y = ind$lat) + 
+        scale_fill_distiller(name="Percent", palette = "OrRd")
+    #scale_fill_gradient2(low = "grey",                                                                           
+    #mid = "blue", midpoint = mid, high = "red", limits = c(j, i)) 
+    
+    
+    
+    #ggplot() + geom_map(data = df, aes(map_id = Area.Name, fill = PersonsEdu),  
+    # ,map = dist,color="black",size=0.25) + 
+    #expand_limits(x = dist$long, y = dist$lat) +  
+    #scale_fill_distiller(name="Percent", palette = "YlGn")+     
+    
+}

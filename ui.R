@@ -77,9 +77,9 @@ shinyUI(navbarPage("Crimes against women in India",
                             )
                             
                   ),
-                  tabPanel("District-wiseLiteracy",
+                  tabPanel("Districtwise Literacy",
                            # Application title
-                           titlePanel("Literacy withion states"),
+                           titlePanel("Literacy within states"),
                            
                            
                            fluidRow(
@@ -99,9 +99,52 @@ shinyUI(navbarPage("Crimes against women in India",
                                )
                                
                                
-                           )      
+                           )                   
+                           
+                  ),
+                  tabPanel("Literacy across India",
+                           # Application title
+                           titlePanel("Literacy across India"),
                            
                            
+                           fluidRow(
+                               column(3,
+                                      radioButtons("region2", label = h3("Region"),
+                                                   choices = list("Total" = "Total",
+                                                                  "Rural" = "Rural", 
+                                                                  "Urban" = "Urban"),                                                   
+                                                   selected = "Total"),
+                                      radioButtons("type2", label = h3("Who"),
+                                                   choices = list("Persons" = "Persons",
+                                                                  "Males" = "Males", 
+                                                                  "Females" = "Females"),                                                                  
+                                                   selected = "Persons"),
+                                      radioButtons("literacyLevel", label = h3("Literacy Level"),
+                                                   choices = list("Attending Education Inst" = "AttendingEdu",
+                                                                  "Illiterate" = "Illiterate", 
+                                                                  "Literate with no edn" = "LiterateNoEdu",
+                                                                  "Below Primary" = "BelowPrimary",
+                                                                  "Primary" = "Primary",
+                                                                  "Middle school" = "Middle",
+                                                                  "Matric or Secondary" = "MatricSecondary",
+                                                                  "HigherSec-Intermdt-PU" = "HigherSecIntmdtPU",
+                                                                  "Non Technical Diploma" = "NonTechnicalDiploma",
+                                                                  "Technical Diploma" = "TechnicalDiploma",
+                                                                  "Graduate and Above" = "GraduateAndAbove",
+                                                                  "Unclassified" = "Unclassified"
+                                                                  ),                                                   
+                                                   selected = "Total")
+                                      
+                               ),
+                               
+                               # Show a plot of the generated distribution
+                               
+                               column(6,
+                                      plotOutput("indiaLiteracy")
+                               )
+                               
+                               
+                           )                   
                            
                   )
                
