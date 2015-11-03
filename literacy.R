@@ -580,9 +580,6 @@ literacyIndia <- function(region,peopleType,literacyLevel)
     
     
     
-    #ggplot() + geom_map(data = df, aes(map_id = Area.Name, fill = PersonsEdu),  
-    # ,map = dist,color="black",size=0.25) + 
-    #expand_limits(x = dist$long, y = dist$lat) +  
-    #scale_fill_distiller(name="Percent", palette = "YlGn")+     
+      
     
 }
