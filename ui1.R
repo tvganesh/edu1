@@ -1,6 +1,6 @@
 
 # Define UI for application that draws a histogram
-shinyUI(navbarPage("Crimes against women in India",
+shinyUI(navbarPage("Literacy in India",
                    tabPanel("Literacy in  India",
                             # Application title
                             titlePanel("India Literacy"),
