@@ -36,7 +36,10 @@ shinyServer(function(input, output,session) {
         
         #print(input$radio)
         #print(input$id)
-        educationalLevels(a,input$type,input$region, input$state)
+        
+             educationalLevels(a,input$type,input$region, input$state,input$status)
+        
+    
     })
     updateSelectizeInput(session, 'state1', choices = states, server = TRUE)
     output$statePlot <- renderPlot({  

@@ -9,14 +9,20 @@ library(RColorBrewer)
 
 #a <- read.csv("india.csv")
 
-educationalLevels <- function(df,peopleType,type,state) {
+educationalLevels <- function(df,peopleType,region,state,status) {
+    #educationalLevels(a,input$type,input$region, input$state,input$status)
+    #df <-a
+    ##region<-"Total"
+    ##peopleType <-"Persons"
+    #state<-'INDIA'
+    #status<-"Normal"
+    #print(peopleType)
+    #print(state)
+    #print(type)
+    #dim(df)
+    #status="Flipped"
    
-    print(peopleType)
-    print(state)
-    print(type)
-    dim(df)
-   
-    b <- filter(df,Area.Name==state & Total..Rural..Urban==type)
+    b <- filter(df,Area.Name==state & Total..Rural..Urban==region)
     #b <- filter(a,Area.Name=="KERALA" & Total..Rural..Urban=="Rural")
     
     # Subset columns with persons
@@ -40,6 +46,9 @@ educationalLevels <- function(df,peopleType,type,state) {
     
     v <- c(1,7:15)
     m1 <- people[2:23,v]
+    names(m1) <- c("age","Below primary","Primary","Middle","MatricSecondary","HigherSecIntmdtPU",
+                              "NonTechnicalDiploma","TechnicalDiploma","GraduateAndAbove","Unclassified")
+    
     
     # Needed to add a '0' so that the numeric and lexicographic ordering is fine
     m1$age = as.character(m1$age)
@@ -52,11 +61,16 @@ educationalLevels <- function(df,peopleType,type,state) {
     m2 <- melt(m1,id.vars="age")
     
     # Add a title
-    atitle <- paste("Distribution of literacy among",tolower(type),tolower(peopleType), "in", state,"over different age groups")
-   
+    atitle <- paste("School/college",tolower(type),tolower(peopleType), "in", state,"vs. age groups")
+    if(status == "Normal"){
     ggplot(m2,aes(x=age,y=value,fill=variable)) +     geom_bar(stat = "identity") +
          xlab("Age") + ylab("Percentage from different age groups") +
         ggtitle(atitle)
+    } else {
+        ggplot(m2,aes(x=variable,y=value,fill=age)) +     geom_bar(stat = "identity") +
+            xlab("Age") + ylab("Percentage from different age groups") +
+            ggtitle(atitle)
+    }
     
 }
 

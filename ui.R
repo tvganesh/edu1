@@ -22,12 +22,16 @@ shinyUI(navbarPage("Literacy in India",
                                                     choices = list("Persons" = "Persons",
                                                                    "Males" = "Males", 
                                                                    "Females" = "Females"),                                                                  
-                                                    selected = "Persons")
+                                                    selected = "Persons"),
+                                       radioButtons("status", label = h3("Plot type"),
+                                                    choices = list("Normal" = "Normal",
+                                                                   "Flipped" = "Flipped"),                                                                  
+                                                    selected = "Normal")
                                 ),
                                 
                                 # Show a plot of the generated distribution
                                 
-                                column(8,
+                                column(9,
                                        plotOutput("distPlot")
                                 )
                                
