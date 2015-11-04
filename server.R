@@ -64,7 +64,7 @@ shinyServer(function(input, output,session) {
         }
         #print(input$radio)
         #print(input$id)
-        districtEdu(input$state2)
+        districtEdu(input$state2,input$type3,input$literacy3)
     })
     output$indiaLiteracy <- renderPlot({  
         if(input$state2==""){

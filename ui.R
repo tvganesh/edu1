@@ -93,7 +93,20 @@ shinyUI(navbarPage("Literacy in India",
                                           "state2", label = "States", choices = NULL,multiple=FALSE,selected="Assam",
                                           options = list(create = TRUE,placeholder = 'Choose the state')
                                           
-                                      )
+                                      ),
+                                      radioButtons("type3", label = h3("Who"),
+                                                   choices = list("Persons" = "Persons",
+                                                                  "Males" = "Males", 
+                                                                  "Females" = "Females"),                                                                  
+                                                   selected = "Persons"),
+                                      radioButtons("literacy3", label = h3("Literacy"),
+                                                   choices = list("Attending Edn" = "Edu",
+                                                                  "School" = "School", 
+                                                                  "College" = "College",
+                                                                  "Vocational Inst" ="VocInst",
+                                                                  "Other Inst" = "OthrInst",
+                                                                   "Literacy Center" = "LitCntr"),                                                                  
+                                                   selected = "Edu")
                                       
                                ),
                                

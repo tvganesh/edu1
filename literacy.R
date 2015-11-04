@@ -247,7 +247,10 @@ allPercent <- function(df,region,state, literacyLevel) {
 
 ##############################################
 
-districtEdu <- function(state){
+districtEdu <- function(state,peopleType,eduInst){
+    #state <-"BIHAR"
+    #peopleType="Persons"
+    #eduInst ="Schools"
     
     # Manually chanhe with only the first letter 
     if(state=="PUNJAB"){
@@ -333,16 +336,38 @@ districtEdu <- function(state){
     
     print("Here")
     df <- NULL
-    df <- c[,5:13]
-    names(df) <-c("Area.Name","Total..Rural..Urban", "Age.group", "Persons","Males","Females",
-                  "PersonsEdu","MalesEdu", "FemalesEdu")
+    df <- c[,5:28]
+    names(df) <-c("Area.Name","Total..Rural..Urban", "Age.group", 
+                  "Persons","Males","Females",
+                  "PersonsEdu","MalesEdu", "FemalesEdu",
+                  "PersonsSchool","MalesSchool","FemalesSchool",
+                  "PersonsCollege","MalesCollege","FemalesCollege",
+                  "PersonsVocInst","MalesVocInst","FemalesVocInst",
+                  "PersonsOthrInst","MalesOthrInst","FemalesOthrInst",
+                  "PersonsLitCntr","MalesLitCntr","FemalesLitCntr")
     
-    df$PersonsEdu <- df$PersonsEdu/df$Persons * 100
-    df$MalesEdu <- df$MalesEdu/df$Males * 100
-    df$FemalesEdu <- df$FemalesEdu/df$Females * 100
-    m= max(df$PersonsEdu)
-    n = min(df$PersonsEdu)
-    mid = (m+n)/2
+    # Subset columns with persons
+    people <- select(df,matches(peopleType,ignore.case=FALSE))
+    
+    # Calculate males percent as percent of total males
+    peoplePercent <- people[,2:7]/people[,1]*100
+    
+    # Add the age column
+    peoplePercent <- cbind(df[1],peoplePercent)
+    
+  
+    
+    
+    #i= max(peoplePercent[,w])
+    ##j = min(peoplePercent[,w])
+    #mid = (i+j)/2
+    
+    #df$PersonsEdu <- df$PersonsEdu/df$Persons * 100
+    ##df$MalesEdu <- df$MalesEdu/df$Males * 100
+    #df$FemalesEdu <- df$FemalesEdu/df$Females * 100
+    #m= max(df$PersonsEdu)
+    #n = min(df$PersonsEdu)
+    #mid = (m+n)/2
     
     length(intersect(df$Area.Name,unique(dist$id)))
     setdiff(df$Area.Name,unique(dist$id))
@@ -464,10 +489,17 @@ districtEdu <- function(state){
         #df[df$Area.Name=="Medinipur",]$Area.Name = "East Midnapore"
     }
     
+    # Create the column from the literacyLevel input
+    u <- eduInst
+    v <- paste(peopleType,eduInst,sep="")
+    print(v)
+    w <- which(names(peoplePercent) == v)
+    print(w)
     
     # Select the districts with lowest literacy
-    m <- head(arrange(df,PersonsEdu),5)
-    lowestLiteracy <- paste(m$Area.Name,"(",round(m$PersonsEdu,1),")",sep="")
+    m <- head(arrange(peoplePercent,peoplePercent[,w]),5)
+    lowestLiteracy <- paste(m$Area.Name,"(",round(m[,w],1),")",sep="")
+    print(lowestLiteracy)
     
     # Get the min/max latitude and longitude for plotting districts with lowest literacy
     # This is obtained from the fortified data frame 
@@ -486,17 +518,32 @@ districtEdu <- function(state){
     )
     
     
-    print("Here1")
-    atitle=paste("Literacy in the state of ", state)
-    print(dim(df))
-    print(df$PersonsEdu)
-    ggplot() + geom_map(data = df, aes(map_id = Area.Name, fill = PersonsEdu),  
+    #Create the title
+    if(eduInst == "Edu"){
+        inst <- "educational inst"
+    } else if(eduInst == "School"){
+        inst <- "schools"
+    } else if(eduInst == "College"){
+        inst <- "colleges"
+    } else if(eduInst == "VocInst"){
+        inst <- "vocational inst."
+    } else if(eduInst == "OthrInst"){
+        inst <- "other inst"
+    } else if(eduInst == "LitCntr"){
+        inst <- "literacy centers"
+    }
+    atitle=paste(peopleType,"in", state, "going to",inst)
+    #print(dim(df))
+    #print(df$PersonsEdu)
+    #Create a dataframe with the selected column and the district
+    
+    d <- data.frame(peoplePercent$Area.Name,peoplePercent[,w])
+    names(d) <-c("Area.Name","EduInst")
+    ggplot() + geom_map(data = d, aes(map_id = Area.Name, fill = EduInst),  
                         ,map = dist,color="black",size=0.25) + 
         expand_limits(x = dist$long, y = dist$lat) +  
         scale_fill_distiller(name="Percent", palette = "YlGn")+
         labs(title=atitle)+
-        
-        #geom_text(aes(label="Bottom 5 districts(literacy)",x+1,y+0.2),colour="blue")+
         geom_text(data = labels, aes(x = xc, y = yc, label = label))+
         #geom_text(aes(label="Data source:https://data.gov.in",maxLong-1,minLat+0.1)) +
         xlab("Longitude") + ylab("Latitude")
