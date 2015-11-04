@@ -46,7 +46,11 @@ shinyServer(function(input, output,session) {
         if(input$state1==""){
             state <-"INDIA"
         }
-        bar(a,input$type1,input$region1, input$state1,input$literacy1)
+        if(input$type1 == "All") {
+            allPercent(a,input$region1,input$state1, input$literacy1)
+        } else {
+                    bar(a,input$type1,input$region1, input$state1,input$literacy1)
+        }
     })
     u <- c(-1,-2,-5,-8,-12,-14,-15,-16,-17,-18,-26,-27,-31,-32,-35,-36)
     updatedStates <- states[u]

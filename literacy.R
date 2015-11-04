@@ -164,8 +164,15 @@ bar <- function(df,peopleType,type,state,literacyLevel) {
 }
 
 #########################################################################################
-allPercent <- function(df,peopleType,type,state,literacyLevel) {
-    b <- filter(a,Area.Name==state & Total..Rural..Urban==type)
+allPercent <- function(df,region,state, literacyLevel) {
+    #df =a
+    #type="Rural"
+    #state="INDIA"
+    #literacyLevel="Literate"
+    print(region)
+    print(state)
+    print(literacyLevel)
+    b <- filter(a,Area.Name==state & Total..Rural..Urban==region)
     
     # Select colums from 8 - 21
     c <- b[,7:19]
@@ -211,13 +218,17 @@ allPercent <- function(df,peopleType,type,state,literacyLevel) {
     w <- which(names(personsPercent) == v)
     
 
-    
+    # Save the mid-points of the batplots as x-coordinates
     persons <- barplot(personsPercent[,w],names.arg=personsPercent$Age,
-                       col="white",border=NA)
+                       col="white",border=NA,ylim=c(0,100))
+    atitle=paste('Percentages of',literacyLevel,"Persons,Males and Females in",state)
+    plot(persons,personsPercent[,w],col="black",ylim=c(0,100),type="l",lty=1,lwd=2,
+         xlab="Age",ylab="Percentage",main=atitle)
+    lines(persons,malesPercent[,w],col="blue",lty=2,lwd=2)
+    lines(persons,femalesPercent[,w],col="red",lty=3,lwd=2)
+    legend(x="topright",c("Persons","Males","Females"), lty=c(1,2,3),   
+           lwd=c(2,2,2),col=c("black","blue","red"))
     
-    with(data=personsPercent,lines(persons,personsPercent[,w],col="black",lty=2,lwd=3))
-    with(data=malesPercent,lines(persons,malesPercent[,w],col="blue",lty=4,lwd=3))
-    with(data=femalesPercent,lines(persons,femalesPercent[,w],col="red",lty=3,lwd=3))
 }
 
 ##############################################
