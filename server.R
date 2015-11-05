@@ -1,4 +1,5 @@
 library(shiny)
+library(shinyjs)
 library(rgeos)
 library(maptools)
 library(ggplot2)
@@ -20,6 +21,10 @@ a$Area.Name <- gsub("[[:space:]]*$","",a$Area.Name)
 
 states <- unique(a$Area.Name)
 
+ind <- readShapeSpatial("./India_SHP/INDIA.shp")
+#plot(ind)
+
+ind <- fortify(ind, region = "ST_NAME")
 # Define server logic required to draw a histogram
 shinyServer(function(input, output,session) {
     
@@ -31,17 +36,21 @@ shinyServer(function(input, output,session) {
     #  2) Its output type is a plot
     #updateSelectizeInput(session, 'id', choices = states, server = TRUE)
     #updateSelectizeInput(session, 'state', choices = states, server = TRUE)
-    updateSelectizeInput(session, 'state', choices = states, server = TRUE)
+    updateSelectizeInput(session, 'state', choices = states, server = TRUE,selected="INDIA")
+    toggle("inputBox")
+    toggle("state")
     output$distPlot <- renderPlot({  
         
         #print(input$radio)
         #print(input$id)
-        
+             
              educationalLevels(a,input$type,input$region, input$state,input$status)
         
     
     })
-    updateSelectizeInput(session, 'state1', choices = states, server = TRUE)
+    updateSelectizeInput(session, 'state1', choices = states, server = TRUE,selected="INDIA")
+    toggle("inputBox1")
+    toggle("state1")
     output$statePlot <- renderPlot({  
         
         print(input$radio1)
@@ -57,7 +66,9 @@ shinyServer(function(input, output,session) {
     })
     u <- c(-1,-2,-5,-8,-12,-14,-15,-16,-17,-18,-26,-27,-31,-32,-35,-36)
     updatedStates <- states[u]
-    updateSelectizeInput(session, 'state2', choices = updatedStates, server = TRUE)
+    updateSelectizeInput(session, 'state2', choices = updatedStates, server = TRUE,selected="KARNATAKA")
+    toggle("inputBox2")
+    toggle("state2")
     output$districtPlot <- renderPlot({  
         if(input$state2==""){
             state2 <-"PUNJAB"

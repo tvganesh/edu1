@@ -21,14 +21,27 @@ educationalLevels <- function(df,peopleType,region,state,status) {
     #print(type)
     #dim(df)
     #status="Flipped"
-   
+    if(state ==""){
+        state = "INDIA"
+    }
+    if(region ==""){
+        region ="Total"
+    }
+    if(peopleType ==""){
+        peopleType="Persons"
+    }
+    if(status ==""){
+        status="Normal"
+    }
+
     b <- filter(df,Area.Name==state & Total..Rural..Urban==region)
     #b <- filter(a,Area.Name=="KERALA" & Total..Rural..Urban=="Rural")
-    
+    print("Reached11")
     # Subset columns with persons
     people <- select(b,matches(peopleType,ignore.case=FALSE))
     l <-paste("...",peopleType,sep="")
     names(people) <- gsub(l,"",names(people))
+    print("Reached")
    
     # Compute the percentage of people in the age group (4,5,6..)  as a percentage of total people in group  
     l <- dim(people)
@@ -41,15 +54,18 @@ educationalLevels <- function(df,peopleType,region,state,status) {
     }
     
     age <- b[,7]
+    print("Reached 13")
+    print(length(age))
+    print(dim(people))
     people <- cbind(age,people)
     
-    
+    print("Reached 14")
     v <- c(1,7:15)
     m1 <- people[2:23,v]
     names(m1) <- c("age","Below primary","Primary","Middle","MatricSecondary","HigherSecIntmdtPU",
                               "NonTechnicalDiploma","TechnicalDiploma","GraduateAndAbove","Unclassified")
-    
-    
+  
+    print("Reached 15")
     # Needed to add a '0' so that the numeric and lexicographic ordering is fine
     m1$age = as.character(m1$age)
     m1$age[2] ="05"
@@ -57,11 +73,11 @@ educationalLevels <- function(df,peopleType,region,state,status) {
     m1$age[4] ="07"
     m1$age[5] ="08"
     m1$age[6] ="09"
-    
+    print("Reached 16")
     m2 <- melt(m1,id.vars="age")
     
     # Add a title
-    atitle <- paste("School/college",tolower(type),tolower(peopleType), "in", state,"vs. age groups")
+    atitle <- paste("School/college",tolower(region),tolower(peopleType), "in", state,"vs. age groups")
     if(status == "Normal"){
     ggplot(m2,aes(x=age,y=value,fill=variable)) +     geom_bar(stat = "identity") +
          xlab("Age") + ylab("Percentage from different age groups") +
@@ -559,8 +575,8 @@ literacyIndia <- function(region,peopleType,literacyLevel)
 {
     
     
-    b <- read.csv("education.csv")
-    c <- filter(b,Age.group=="All ages" & Total..Rural..Urban==region)
+   
+    c <- filter(a,Age.group=="All ages" & Total..Rural..Urban==region)
     
     
     # Subset columns with persons
@@ -586,10 +602,10 @@ literacyIndia <- function(region,peopleType,literacyLevel)
     # Remove trailing spaces
     peoplePercent$Area.Name <- gsub("[[:space:]]*$","",peoplePercent$Area.Name)
     
-    ind <- readShapeSpatial("./India_SHP/INDIA.shp")
-    plot(ind)
+    #ind <- readShapeSpatial("./India_SHP/INDIA.shp")
+    #plot(ind)
     
-    ind <- fortify(ind, region = "ST_NAME")
+    #ind <- fortify(ind, region = "ST_NAME")
     
     
     # Set the names as in the map

@@ -1,16 +1,19 @@
-
+library(shiny)
+library(shinyjs)
 # Define UI for application that draws a histogram
-shinyUI(navbarPage("Literacy in India",
-                   tabPanel("Literacy in  India",
+shinyUI(navbarPage(useShinyjs(),
+                  "Literacy in India",
+                   tabPanel("Educational inst. attendance",
                             # Application title
                             titlePanel("India Literacy"),
                             
                             
                             fluidRow(
                                 column(3,
-                                       selectizeInput(
+                                       code(id = "inputBox", "Please wait, loading ..."),
+                                       hidden(selectizeInput(
                                            "state", label = "States", choices = NULL,multiple=FALSE,selected="Assam",
-                                           options = list(create = TRUE,placeholder = 'Choose the state')
+                                           options = list(create = TRUE,placeholder = 'Choose the state'))
                                            
                                        ),
                                        radioButtons("region", label = h3("Region"),
@@ -49,9 +52,11 @@ shinyUI(navbarPage("Literacy in India",
                                      
                                      fluidRow(
                                          column(3,
-                                                selectizeInput(
+                                                code(id = "inputBox1", "Please wait, loading ..."),
+                                                hidden(selectizeInput(
+                                               
                                                     "state1", label = "States", choices = NULL,multiple=FALSE,selected="Assam",
-                                                    options = list(create = TRUE,placeholder = 'Choose the state')
+                                                    options = list(create = TRUE,placeholder = 'Choose the state'))
                                                     
                                                 ),
                                                 radioButtons("region1", label = h3("Region"),
@@ -89,9 +94,10 @@ shinyUI(navbarPage("Literacy in India",
                            
                            fluidRow(
                                column(3,
-                                      selectizeInput(
+                                      code(id = "inputBox2", "Please wait, loading ..."),
+                                      hidden(selectizeInput(
                                           "state2", label = "States", choices = NULL,multiple=FALSE,selected="Assam",
-                                          options = list(create = TRUE,placeholder = 'Choose the state')
+                                          options = list(create = TRUE,placeholder = 'Choose the state'))
                                           
                                       ),
                                       radioButtons("type3", label = h3("Who"),
