@@ -36,6 +36,11 @@ shinyUI(navbarPage(useShinyjs(),
                                 
                                 column(9,
                                        plotOutput("distPlot")
+                                ),
+                                column(7, offset=4,
+                                       tags$h5((tags$i("Designed and developed by Tinniam V Ganesh"))),
+                                       tags$h5((tags$i("Nov 5,2015"))),
+                                       tags$h6("Data source:https://data.gov.in")
                                 )
                                
                                 
@@ -81,6 +86,11 @@ shinyUI(navbarPage(useShinyjs(),
                                          
                                          column(8,
                                                 plotOutput("statePlot")
+                                         ),
+                                         column(7, offset=4,
+                                                tags$h5((tags$i("Designed and developed by Tinniam V Ganesh"))),
+                                                tags$h5((tags$i("Nov 5,2015"))),
+                                                tags$h6("Data source:https://data.gov.in")
                                          )
                                          
                             
@@ -120,6 +130,11 @@ shinyUI(navbarPage(useShinyjs(),
                                
                                column(6,
                                       plotOutput("districtPlot")
+                               ),
+                               column(7, offset=4,
+                                      tags$h5((tags$i("Designed and developed by Tinniam V Ganesh"))),
+                                      tags$h5((tags$i("Nov 5,2015"))),
+                                      tags$h6("Data source:https://data.gov.in")
                                )
                                
                                
@@ -132,6 +147,7 @@ shinyUI(navbarPage(useShinyjs(),
                            
                            
                            fluidRow(
+                               
                                column(3,
                                       radioButtons("region2", label = h3("Region"),
                                                    choices = list("Urban+Rural" = "Total",
@@ -165,7 +181,15 @@ shinyUI(navbarPage(useShinyjs(),
                                
                                column(6,
                                       plotOutput("indiaLiteracy")
+                               ),
+                               column(7, offset=4,
+                                      tags$h5((tags$i("Designed and developed by Tinniam V Ganesh"))),
+                                      tags$h5((tags$i("Nov 5,2015"))),
+                                      tags$h6("Data source:https://data.gov.in")
+                                     
                                )
+                               
+                              
                                
                                
                            )                   

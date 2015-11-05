@@ -183,6 +183,7 @@ bar <- function(df,peopleType,type,state,literacyLevel) {
     with(data=natPeoplePercent,lines(natPeople,natPeoplePercent[,w],col="black",lty=3,lwd=3))
     legend(x="topright",c("National Average"), lty=c(3),   
            lwd=c(3),col=c("black"))
+   
     
     ################################################################################
     ################################################################################
