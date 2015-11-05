@@ -10,7 +10,9 @@ library(stringr)
 source("./literacy.R", local=TRUE)
 
 # Read the data
-a <- read.csv("education.csv")
+#a <- read.csv("education.csv")
+#save(a,file="education.RData")
+load(file="education.RData")
 
 # Clean the Area Name
 colnames(a) <- gsub("Educational.level...","",colnames(a))
@@ -21,10 +23,12 @@ a$Area.Name <- gsub("[[:space:]]*$","",a$Area.Name)
 
 states <- unique(a$Area.Name)
 
-ind <- readShapeSpatial("./India_SHP/INDIA.shp")
+#ind <- readShapeSpatial("./India_SHP/INDIA.shp")
 #plot(ind)
 
-ind <- fortify(ind, region = "ST_NAME")
+#ind <- fortify(ind, region = "ST_NAME")
+#save(ind,file="./INDIA_SHP/ind.RData")
+load(file="./INDIA_SHP/ind.RData")
 # Define server logic required to draw a histogram
 shinyServer(function(input, output,session) {
     

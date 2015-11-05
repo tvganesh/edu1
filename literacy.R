@@ -101,6 +101,18 @@ bar <- function(df,peopleType,type,state,literacyLevel) {
     print(type)
     print(state)
     print(literacyLevel)
+    if(state ==""){
+        state = "INDIA"
+    }
+    if(type ==""){
+        type ="Total"
+    }
+    if(peopleType ==""){
+        peopleType="Persons"
+    }
+    if(literacyLevel ==""){
+        literacyLevel="Edu"
+    }
     #a <- read.csv("education.csv")
     #colnames(a) <- gsub("Educational.level...","",colnames(a))
     
@@ -324,26 +336,28 @@ districtEdu <- function(state,peopleType,eduInst){
         tmp = ind_dist@polygons[i]
         polygon_list = c(polygon_list,tmp)
     }
- 
+    print("reached")
     # construct a new shape file with the  districts
     dist_spatial = SpatialPolygons(polygon_list,1:length(polygon_list))
     dist_spatial_frame = SpatialPolygonsDataFrame(dist_spatial,data=state_dist_df)
     print(state)
     shpFile <- paste( state,".shp",sep="")
     print(shpFile)
+    print("reached1")
     
-    print("reached here")
     districtDir <- paste("./district/",shpFile,sep="")
     writeSpatialShape(dist_spatial_frame,districtDir)
     dist_df = readShapePoly(districtDir)
-    
+    print("reached here")
     plot(dist_df)
     
     dist <- fortify(dist_df, region = "NAME_2")
-    
+    print("reached here11")
     csvFile <- paste(state,".csv",sep="")
     csvDir <- paste("./data/",csvFile,sep="")
     stateData <- read.csv(csvDir)
+    
+    print("reached here11")
     a <- filter(stateData,Age.group=="All ages")
     b <- filter(a,grepl("District",Area.Name))
     c <- filter(b,Total..Rural..Urban=="Total")
